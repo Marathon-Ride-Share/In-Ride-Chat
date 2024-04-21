@@ -3,33 +3,29 @@ package com.example.inridechat.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
 @Document
 public class ChatMessage {
     @Id
     private String id;
     private String tripId;
     private String senderId;
-    private String receiverId; // For private chat, this will be the ID of the receiver user
+    private String receiverId;
     private String message;
     private long timestamp;
-    private boolean isGroupMessage; // Flag to indicate if it's a group message
+    private boolean isGroupMessage;
 
-    // No-argument constructor
-    public ChatMessage() {
-    }
+    public ChatMessage() {}
 
-    // All-arguments constructor
     public ChatMessage(String tripId, String senderId, String message, long timestamp) {
         this.tripId = tripId;
         this.senderId = senderId;
-        this.receiverId = null; // No specific receiver
+        this.receiverId = null; // No specific receiver, consider group message
         this.message = message;
         this.timestamp = timestamp;
-        this.isGroupMessage = true; // Assume it's a group message if no receiver is specified
+        this.isGroupMessage = true;
     }
 
-    // Getters and Setters
+    // Getters and setters
     public String getId() {
         return id;
     }
