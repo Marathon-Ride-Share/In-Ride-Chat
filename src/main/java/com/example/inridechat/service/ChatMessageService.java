@@ -24,4 +24,9 @@ public class ChatMessageService {
     public List<ChatMessage> getPrivateMessages(String senderId, String receiverId) {
         return chatMessageRepository.findBySenderIdAndReceiverId(senderId, receiverId);
     }
+
+    // Method to retrieve all group messages
+    public List<ChatMessage> getAllGroupMessages() {
+        return chatMessageRepository.findByIsGroupMessageTrue();
+    }
 }
