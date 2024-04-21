@@ -16,7 +16,7 @@ public class KafkaConsumerService {
     @Autowired
     private ChatMessageService chatMessageService;  // Service to manage chat messages and rooms
 
-    @KafkaListener(topics = "ride-events", groupId = "inridechat")
+    @KafkaListener(topics = "user-chat", groupId = "inridechat")
     public void listen(String message) {
         try {
             KafkaChatGroupEvent event = objectMapper.readValue(message, KafkaChatGroupEvent.class);
