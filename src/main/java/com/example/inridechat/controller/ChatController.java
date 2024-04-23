@@ -29,6 +29,7 @@ public class ChatController {
 
     @GetMapping("/{type}/{identifier}")
     public List<ChatMessage> getMessages(@PathVariable String type, @PathVariable String identifier) {
+        System.out.println("type: " + type + " identifier: " + identifier);
         return chatImplementations.get(type).receiveMessage(identifier);
     }
 }

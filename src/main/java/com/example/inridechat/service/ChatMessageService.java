@@ -25,7 +25,9 @@ public class ChatMessageService {
     }
 
     public List<ChatMessage> getGroupMessages(String tripId) {
-        return chatMessageRepository.findByTripIdAndIsGroupMessageTrue(tripId);
+        List<ChatMessage> chatMessage= chatMessageRepository.findByTripId(tripId);
+        System.out.println("ChatMessageService Group messages: " + chatMessage.toString());
+        return chatMessage;
     }
 
     public List<ChatMessage> getPrivateMessages(String senderId, String receiverId) {
