@@ -15,16 +15,27 @@ public class GroupChatImplementation implements ChatInterface {
 
     @Override
     public ChatMessage sendMessage(ChatMessage message) {
-        // Logic to send message for group chat
         chatMessageService.saveChatMessage(message);
         return message;
     }
 
     @Override
     public List<ChatMessage> receiveMessage(String tripId) {
-        List<ChatMessage> ChatMessage = chatMessageService.getGroupMessages(tripId);
-        System.out.println("GroupChatImplementation Group messages: " + ChatMessage.toString());
-        return ChatMessage;
+        return chatMessageService.getGroupMessages(tripId);
     }
 
+    @Override
+    public void addParticipant(String tripId, String participantId) {
+        chatMessageService.addUserToChat(tripId, participantId);
+    }
+
+    @Override
+    public void removeParticipant(String tripId, String participantId) {
+        chatMessageService.removeUserFromChat(tripId, participantId);
+    }
+
+    @Override
+    public List<String> getParticipants(String tripId) {
+        return chatMessageService.getChatParticipants(tripId);
+    }
 }

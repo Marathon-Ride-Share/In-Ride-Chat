@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Collections;
 
 @Service
 public class PrivateChatImplementation implements ChatInterface {
@@ -21,5 +22,23 @@ public class PrivateChatImplementation implements ChatInterface {
     @Override
     public List<ChatMessage> receiveMessage(String receiverId) {
         return chatMessageService.getPrivateMessages(null, receiverId);
+    }
+
+    @Override
+    public void addParticipant(String identifier, String participantId) {
+        // This operation is not supported in private chat
+        throw new UnsupportedOperationException("Add participant is not supported in private chat");
+    }
+
+    @Override
+    public void removeParticipant(String identifier, String participantId) {
+        // This operation is not supported in private chat
+        throw new UnsupportedOperationException("Remove participant is not supported in private chat");
+    }
+
+    @Override
+    public List<String> getParticipants(String identifier) {
+        // This operation is not supported in private chat
+        throw new UnsupportedOperationException("Get participants is not supported in private chat");
     }
 }
