@@ -1,18 +1,16 @@
 package com.example.inridechat.service;
 
+import com.example.inridechat.exceptions.InridechatExceptions;
 import com.example.inridechat.model.ChatMessage;
 import com.example.inridechat.repository.ChatMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.TextMessage;
-
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,18 +20,33 @@ public class ChatMessageService {
     private List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
     private Map<String, List<WebSocketSession>> chatRooms = new HashMap<>();
     private Map<String, List<String>> participants = new HashMap<>();
+    @Autowired
+    public ChatMessageService(ChatMessageRepository chatMessageRepository) {
+        this.chatMessageRepository = chatMessageRepository;
+    }
 
-    public void saveChatMessage(ChatMessage message) {
-        chatMessageRepository.save(message);
+    public ChatMessage saveChatMessage(String rideId, ChatMessage message) throws InridechatExceptions {
+        message.setTripId(rideId);
+        try {
+            return chatMessageRepository.save(message);
+        } catch (Exception e) {
+            throw new InridechatExceptions(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to save chat message");
+        }
+    }
+
+    public List<ChatMessage> getChatMessage(String rideId) throws InridechatExceptions {
+        try {
+            return chatMessageRepository.findByTripId(rideId);
+        } catch (Exception e) {
+            throw new InridechatExceptions(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to retrieve chat messages");
+        }
     }
 
     public List<ChatMessage> getGroupMessages(String tripId) {
         return chatMessageRepository.findByTripId(tripId);
     }
 
-    public List<ChatMessage> getPrivateMessages(String senderId, String receiverId) {
-        return chatMessageRepository.findBySenderIdAndReceiverId(senderId, receiverId);
-    }
+
 
     public void createChatRoom(String tripId) {
         chatRooms.putIfAbsent(tripId, new CopyOnWriteArrayList<>());

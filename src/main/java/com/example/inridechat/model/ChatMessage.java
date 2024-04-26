@@ -1,88 +1,23 @@
 package com.example.inridechat.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.springframework.data.annotation.Id;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Id;
+import java.util.Date;
 
-@Document
-@Data
-@AllArgsConstructor
+@Setter
+@Getter
+@Document(collection = "chatMessages")
 public class ChatMessage {
-    @Id
-    private String id;
+    
+    private Date timestamp;
     private String tripId;
     private String senderId;
-    private String receiverId;
     private String message;
-    private long timestamp;
-    private boolean isGroupMessage;
+    private String chatType;  // 'group' or 'private'
 
     public ChatMessage() {}
 
-    public ChatMessage(String tripId, String senderId, String message, long timestamp) {
-        this.tripId = tripId;
-        this.senderId = senderId;
-        this.receiverId = null; // No specific receiver, consider group message
-        this.message = message;
-        this.timestamp = timestamp;
-        this.isGroupMessage = true;
-    }
-
-    // Getters and setters
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getTripId() {
-        return tripId;
-    }
-
-    public void setTripId(String tripId) {
-        this.tripId = tripId;
-    }
-
-    public String getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(String senderId) {
-        this.senderId = senderId;
-    }
-
-    public String getReceiverId() {
-        return receiverId;
-    }
-
-    public void setReceiverId(String receiverId) {
-        this.receiverId = receiverId;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public boolean isGroupMessage() {
-        return isGroupMessage;
-    }
-
-    public void setGroupMessage(boolean groupMessage) {
-        isGroupMessage = groupMessage;
-    }
+    // Getters and Setters
 }
