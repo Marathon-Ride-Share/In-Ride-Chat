@@ -78,11 +78,13 @@ public class ChatMessageService {
         if (sessions.containsKey(rideId)) {
             System.out.println("Going to broadcast to all sessions connected to rideID: " + rideId);
             List<WebSocketSession> currentSessions = sessions.get(rideId);
+            Set<WebSocketSession> sentSessions = new HashSet<>(); // Create a Set to store sent sessions
             System.out.println("Sending message to " + currentSessions.size() + " sessions in chat room " + rideId);
             for (WebSocketSession session : currentSessions) {
-                if (session.isOpen()) {
+                if (session.isOpen() && !sentSessions.contains(session)) { // Check if the session has not received the message yet
                     System.out.println("Sending message to session: " + session.getId());
                     session.sendMessage(new TextMessage(jsonMessage));
+                    sentSessions.add(session); // Add the session to the Set
                 }
             }
         }
