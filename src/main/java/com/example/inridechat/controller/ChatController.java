@@ -2,16 +2,14 @@ package com.example.inridechat.controller;
 
 import com.example.inridechat.exceptions.InridechatExceptions;
 import com.example.inridechat.model.ChatMessage;
-import com.example.inridechat.service.ChatInterface;
 import com.example.inridechat.service.ChatMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 @Controller
 @RestController
 @RequestMapping("/chat")
@@ -41,7 +39,7 @@ public class ChatController {
     @PostMapping("/send/{rideId}")
     public ResponseEntity<?> sendMessage(@RequestBody ChatMessage message, @PathVariable String rideId) {
         try {
-            ChatMessage response = chatMessageService.saveChatMessage(rideId,message);
+            ChatMessage response = chatMessageService.saveChatMessage(message);
             return ResponseEntity.ok(response);
         } catch(InridechatExceptions e) {
             return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());

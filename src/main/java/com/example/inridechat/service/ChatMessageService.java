@@ -3,6 +3,7 @@ package com.example.inridechat.service;
 import com.example.inridechat.exceptions.InridechatExceptions;
 import com.example.inridechat.model.ChatMessage;
 import com.example.inridechat.repository.ChatMessageRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,6 @@ import org.springframework.web.socket.TextMessage;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 @Service
 public class ChatMessageService {
@@ -25,9 +25,9 @@ public class ChatMessageService {
         this.chatMessageRepository = chatMessageRepository;
     }
 
-    public ChatMessage saveChatMessage(String rideId, ChatMessage message) throws InridechatExceptions {
-        message.setTripId(rideId);
+    public ChatMessage saveChatMessage(ChatMessage message) throws InridechatExceptions {
         try {
+            broadcastMessage(message);
             return chatMessageRepository.save(message);
         } catch (Exception e) {
             throw new InridechatExceptions(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed to save chat message");
@@ -70,21 +70,29 @@ public class ChatMessageService {
         participants.remove(tripId);
     }
 
-    public void broadcastMessage(String payload) throws IOException {
+    public void broadcastMessage(ChatMessage message) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonMessage = mapper.writeValueAsString(message);
+
         System.out.println("Broadcasting message to " + sessions.size() + " sessions.");
         for (WebSocketSession session : sessions) {
             if (session.isOpen()) {
                 System.out.println("Sending message to session: " + session.getId());
-                session.sendMessage(new TextMessage(payload));
+                session.sendMessage(new TextMessage(jsonMessage));
             }
         }
     }
 
     public void registerSession(WebSocketSession session) {
+        System.out.println("Adding session to sessions!!!!!!!!!");
         sessions.add(session);
     }
 
     public void unregisterSession(WebSocketSession session) {
         sessions.remove(session);
+    }
+
+    public List<ChatMessage> getPrivateMessages(Object o, String receiverId) {
+        return chatMessageRepository.findByTripId(receiverId);
     }
 }

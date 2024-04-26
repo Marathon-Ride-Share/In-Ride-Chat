@@ -18,7 +18,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         try {
             System.out.println("Received message: " + message.getPayload());
-            chatMessageService.broadcastMessage(message.getPayload());
         } catch (Exception e) {
             System.err.println("Error handling message: " + e.getMessage());
             e.printStackTrace();
